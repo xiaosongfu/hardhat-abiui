@@ -6,7 +6,9 @@ import { HardhatConfig, HardhatUserConfig } from "hardhat/types";
 import "./type-extensions";
 
 // Import tasks
-import "./tasks/abiui";
+import "./tasks/abiui-local";
+import "./tasks/abiui-login";
+import "./tasks/abiui-deploy";
 import { DEFAULT_DEPLOYED_DIR } from "./constants";
 
 extendConfig(

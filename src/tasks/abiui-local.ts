@@ -1,7 +1,7 @@
 import { task } from "hardhat/config";
-import { HardhatRuntimeEnvironment, NetworkConfig } from "hardhat/types";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { HardhatPluginError } from "hardhat/plugins";
-import { OUTPUT_DIR, PLUGIN_NAME, TASK_ABI_UI } from "../constants";
+import { OUTPUT_DIR, PLUGIN_NAME, TASK_ABI_UI_LOCAL } from "../constants";
 import fs from "fs";
 import Mustache from "mustache";
 import { runScript } from "hardhat/internal/util/scripts-runner";
@@ -17,20 +17,18 @@ import {
   WRITE_FUNCTIONS_JS,
 } from "../misc/templates";
 import { toHex } from "hardhat/internal/util/bigint";
-import { blockchainExplorer, chainRPC } from "../misc/rpcs";
+import { blockchainExplorer, chainRPC } from "../misc/chains";
 
-task(TASK_ABI_UI, "Start the abiui server")
+task(TASK_ABI_UI_LOCAL, "Start the abiui server")
   .addOptionalParam("contract", "Contract name")
   .addOptionalParam("address", "Contract address")
   .addOptionalParam("port", "Listen port")
-  .addFlag("deploy", "starting deploy to `abiui.xyz`")
   .setAction(
     async (
       taskArgs: {
         contract: string;
         address: string;
         port: string;
-        deploy: boolean;
       },
       hre: HardhatRuntimeEnvironment,
     ) => {
@@ -147,11 +145,14 @@ task(TASK_ABI_UI, "Start the abiui server")
         flag: "a+",
       });
 
-      if (taskArgs.deploy) {
-        // TODO ...
-      } else {
-        // start static http server
-        await runScript(`${destDir}/index.js`);
-      }
+      // start static http server
+      await runScript(`${destDir}/index.js`);
     },
   );
+
+// task alias
+task("abiui", "alias of 'abiui-local'").setAction(
+  async (taskArgs: any, hre: HardhatRuntimeEnvironment) => {
+    await hre.run(TASK_ABI_UI_LOCAL);
+  },
+);
