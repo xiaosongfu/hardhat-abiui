@@ -56,7 +56,9 @@ export async function readArtifact(
           case "payable":
             writeFunctions.push({
               identifier: `fn_${element.name}_${(
-                element.inputs.map((i: any) => i.type) as string[]
+                element.inputs.map(
+                  (i: any) => i.type.replace("[", "").replace("]", "Arr"), // replace `uint256[]` to `uint256Arr`
+                ) as string[]
               ).join("_")}`,
               name: element.name,
               hasInputs: element.inputs.length > 0,
@@ -69,7 +71,9 @@ export async function readArtifact(
           case "pure":
             readFunctions.push({
               identifier: `fn_${element.name}_${(
-                element.inputs.map((i: any) => i.type) as string[]
+                element.inputs.map(
+                  (i: any) => i.type.replace("[", "").replace("]", "Arr"), // replace `uint256[]` to `uint256Arr`
+                ) as string[]
               ).join("_")}`,
               name: element.name,
               hasInputs: element.inputs.length > 0,
@@ -88,7 +92,9 @@ export async function readArtifact(
 
         events.push({
           identifier: `event_${element.name}_${(
-            element.inputs.map((i: any) => i.type) as string[]
+            element.inputs.map(
+              (i: any) => i.type.replace("[", "").replace("]", "Arr"), // replace `uint256[]` to `uint256Arr`
+            ) as string[]
           ).join("_")}`,
           name: element.name,
           inputs: element.inputs.map((i: any) => {
