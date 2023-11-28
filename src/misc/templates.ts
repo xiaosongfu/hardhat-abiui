@@ -16,12 +16,17 @@ const {{identifier}}Outputs = document.getElementById("{{identifier}}_outputs");
     {{identifier}}QueryBtn.disabled = "";
     return;
   }
-  const result = await contract.{{name}}({{#inputs}}{{identifier}}_{{inputName}}_input, {{/inputs}} {});
+  try {
+    const result = await contract.{{name}}({{#inputs}}{{identifier}}_{{inputName}}_input, {{/inputs}} {});
   {{/hasInputs}}
   {{^hasInputs}}
-  const result = await contract.{{name}}();
+  try {
+    const result = await contract.{{name}}();
   {{/hasInputs}}
-  {{identifier}}Outputs.innerText = "result: " + result.toString();
+    {{identifier}}Outputs.innerText = "Query result: " + result.toString();
+  } catch (e) {
+    {{identifier}}Outputs.innerText = "Query failed: " + e.message;
+  }
   {{identifier}}QueryBtn.innerText = "Query";
   {{identifier}}QueryBtn.disabled = "";
 });
@@ -58,7 +63,7 @@ const {{identifier}}Outputs = document.getElementById("{{identifier}}_outputs");
     await tx.wait();
     {{identifier}}Outputs.innerHTML = {{identifier}}Outputs.innerHTML + "<br />&nbsp;&nbsp;" + "Tx confirmed, execute success!";
   } catch (e) {
-    {{identifier}}Outputs.innerText = "Tx failed: " + e.message;
+    {{identifier}}Outputs.innerText = "Execute failed: " + e.message;
   }
   {{identifier}}ExecuteBtn.innerText = "Execute";
   {{identifier}}ExecuteBtn.disabled = "";
