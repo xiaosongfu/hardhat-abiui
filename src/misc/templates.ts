@@ -17,7 +17,7 @@ const {{identifier}}Outputs = document.getElementById("{{identifier}}_outputs");
     return;
   }
   try {
-    const result = await contract.{{name}}({{#inputs}}{{identifier}}_{{inputName}}_input, {{/inputs}} {});
+    const result = await contract.{{name}}({{#inputs}}{{#isArray}}{{identifier}}_{{inputName}}_input.split(","){{/isArray}}{{^isArray}}{{identifier}}_{{inputName}}_input{{/isArray}}, {{/inputs}} {});
   {{/hasInputs}}
   {{^hasInputs}}
   try {
@@ -52,7 +52,7 @@ const {{identifier}}Outputs = document.getElementById("{{identifier}}_outputs");
     return;
   }
   try {
-    const tx = await contract.{{name}}({{#inputs}}{{identifier}}_{{inputName}}_input, {{/inputs}} {});
+    const tx = await contract.{{name}}({{#inputs}}{{#isArray}}{{identifier}}_{{inputName}}_input.split(","){{/isArray}}{{^isArray}}{{identifier}}_{{inputName}}_input{{/isArray}}, {{/inputs}} {});
   {{/hasInputs}}
   {{^hasInputs}}
   try {

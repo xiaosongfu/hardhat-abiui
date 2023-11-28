@@ -8,7 +8,7 @@ interface Function {
   identifier: string; // unique identifier of a function
   name: string;
   hasInputs: boolean;
-  inputs: { inputName: string; inputType: string }[];
+  inputs: { inputName: string; inputType: string; isArray: boolean }[];
   // hasOutputs: boolean; // TODO unused
   // outputs: { fn:string, name: string; type: string }[]; // TODO unused
 }
@@ -63,7 +63,11 @@ export async function readArtifact(
               name: element.name,
               hasInputs: element.inputs.length > 0,
               inputs: element.inputs.map((i: any) => {
-                return { inputName: i.name, inputType: i.type };
+                return {
+                  inputName: i.name,
+                  inputType: i.type,
+                  isArray: i.type.endsWith("[]"),
+                };
               }),
             });
             break;
@@ -78,7 +82,11 @@ export async function readArtifact(
               name: element.name,
               hasInputs: element.inputs.length > 0,
               inputs: element.inputs.map((i: any) => {
-                return { inputName: i.name, inputType: i.type };
+                return {
+                  inputName: i.name,
+                  inputType: i.type,
+                  isArray: i.type.endsWith("[]"),
+                };
               }),
             });
             break;
