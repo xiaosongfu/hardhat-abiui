@@ -151,8 +151,19 @@ task(TASK_ABI_UI_LOCAL, "Start the abiui server")
   );
 
 // task alias
-task("abiui", "alias of 'abiui-local'").setAction(
-  async (taskArgs: any, hre: HardhatRuntimeEnvironment) => {
-    await hre.run(TASK_ABI_UI_LOCAL);
-  },
-);
+task("abiui", "alias of 'abiui-local'")
+  .addOptionalParam("contract", "Contract name")
+  .addOptionalParam("address", "Contract address")
+  .addOptionalParam("port", "Listen port")
+  .setAction(
+    async (
+      taskArgs: {
+        contract: string;
+        address: string;
+        port: string;
+      },
+      hre: HardhatRuntimeEnvironment,
+    ) => {
+      await hre.run(TASK_ABI_UI_LOCAL, taskArgs);
+    },
+  );
