@@ -179,7 +179,7 @@ export const EVENT_HTML: string = `
 export const INDEX_HTML: string = `
 <html>
   <head>
-    <title>{{contract}} at {{chainName}}</title>
+    <title>{{contractName}} at {{chainName}}</title>
   </head>
   <script async type="module">
     import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.8.0/ethers.min.js";
@@ -277,6 +277,8 @@ export const INDEX_HTML: string = `
   <body>
     <div><h3>Network: {{chainName}}</h3></div>
     <div><h3 id="account">Waiting for connect wallet...</h3></div>
+    <div><h3>ContractName: {{contractName}}</h3></div>
+    <div><h3>ContractAddress: {{contractAddress}}</h3></div>
     
     <h1>Read Functions</h1>
 

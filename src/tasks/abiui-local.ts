@@ -57,8 +57,8 @@ task(TASK_ABI_UI_LOCAL, "Start the abiui server")
 
       // 2 get contract
       // command line `contract` argument's priority is higher than `defaultContract` from `hardhat.config.ts`
-      let contract = taskArgs.contract;
-      if (contract == null) {
+      let contractName = taskArgs.contract;
+      if (contractName == null) {
         if (cfg.defaultContract == null) {
           throw new HardhatPluginError(
             PLUGIN_NAME,
@@ -66,7 +66,7 @@ task(TASK_ABI_UI_LOCAL, "Start the abiui server")
           );
         }
 
-        contract = cfg.defaultContract;
+        contractName = cfg.defaultContract;
       }
 
       // 3 get contract address
@@ -80,7 +80,7 @@ task(TASK_ABI_UI_LOCAL, "Start the abiui server")
         }
 
         contractAddress = readContractAddress(
-          contract,
+          contractName,
           chainName,
           cfg.deployedDir,
         );
@@ -89,7 +89,7 @@ task(TASK_ABI_UI_LOCAL, "Start the abiui server")
       // 4 get contract abi
       const [readFunctions, writeFunctions, events, abi] = await readArtifact(
         hre,
-        contract,
+        contractName,
       );
 
       // ----------------- JS -----------------
@@ -118,7 +118,7 @@ task(TASK_ABI_UI_LOCAL, "Start the abiui server")
         chainId: toHex(chainId!),
         chainName: chainName,
         chainRPC: chainRPC(chainId!),
-        contract,
+        contractName,
         abi: JSON.stringify(abi, null, 2),
         contractAddress,
         readCodeJS,
@@ -133,7 +133,7 @@ task(TASK_ABI_UI_LOCAL, "Start the abiui server")
       });
 
       // create `node_modules/.abiui/<contract>_<network>` dir, if exists, remove it first
-      const destDir = `${OUTPUT_DIR}/${contract}_${chainName}`;
+      const destDir = `${OUTPUT_DIR}/${contractName}_${chainName}`;
       if (fs.existsSync(destDir)) fs.rmSync(destDir, { recursive: true });
       fs.mkdirSync(destDir, { recursive: true });
 
