@@ -77,7 +77,7 @@ const {{identifier}}QueryBtn = document.getElementById("{{identifier}}_query_btn
 {{identifier}}QueryBtn.addEventListener("click", async () => {
   const filter = contract.filters.{{name}}();
   const events = await contract.queryFilter(filter);
-  console.log(">>> '{{name}}' history events inputs=[{{#inputs}}{{inputName}}, {{/inputs}}]:");
+  console.log(">>> '{{name}}' history events inputs=[{{#inputs}}{{inputName}}, {{/inputs}}]");
   events.forEach((event) => {
     const result = contract.interface.decodeEventLog(
       "{{name}}",
@@ -85,8 +85,8 @@ const {{identifier}}QueryBtn = document.getElementById("{{identifier}}_query_btn
       event.topics,
     );
     console.log(
-      // "History 'Transfer' Event:" + result[0] + ", " + result[1] + ", " + result[2] + ", " + event.blockNumber,
-      "History '{{name}}' Event: " + {{#inputsIndex}}result[{{.}}] + ", " + {{/inputsIndex}}event.blockNumber,
+      // "History 'Transfer' Event: [" + result[0] + ", " + result[1] + ", " + result[2] + ", ] blockNumber: " + event.blockNumber,
+      "History '{{name}}' Event: [" + {{#inputsIndex}}result[{{.}}] + ", " + {{/inputsIndex}} "] blockNumber: " + event.blockNumber,
     );
   });
 });
@@ -100,8 +100,8 @@ const {{identifier}}OnBtn = document.getElementById("{{identifier}}_on_btn");
 
   await contract.on("{{name}}", ({{#inputs}}{{inputName}}, {{/inputs}}event) => {
     console.log(
-      // "New 'Transfer' Event: " + from + ", " + to + ", " + amount + ", " + event.log.blockNumber,
-      "New '{{name}}' Event: " + {{#inputs}}{{inputName}} + ", " + {{/inputs}}event.log.blockNumber,
+      // "New 'Transfer' Event: [" + from + ", " + to + ", " + amount + ", ] blockNumber: " + event.log.blockNumber,
+      "New '{{name}}' Event: [" + {{#inputs}}{{inputName}} + ", " + {{/inputs}} "] blockNumber: " + event.log.blockNumber,
     );
   });
 });
