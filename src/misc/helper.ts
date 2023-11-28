@@ -5,17 +5,19 @@ import fs from "fs";
 import { FormatTypes, Interface } from "@ethersproject/abi";
 
 interface Function {
+  identifier: string; // unique identifier of a function
   name: string;
   hasInputs: boolean;
-  inputs: { fn: string; name: string; type: string }[];
+  inputs: { inputName: string; inputType: string }[];
   // hasOutputs: boolean; // TODO unused
   // outputs: { fn:string, name: string; type: string }[]; // TODO unused
 }
 
 interface Event {
+  identifier: string; // unique identifier of an event
   name: string;
-  inputs: { event: string; name: string; type: string }[];
-  inputsIndex: number[];
+  inputs: { inputName: string; inputType: string }[];
+  inputsIndex: number[]; // read event param by `result[0]`, so need the index of each input
 }
 
 export async function readArtifact(
@@ -43,6 +45,7 @@ export async function readArtifact(
   const readFunctions: Function[] = [];
   const writeFunctions: Function[] = [];
   const events: Event[] = [];
+
   for (const element of abi) {
     // => type: constructor event function
     switch (element.type) {
@@ -52,20 +55,26 @@ export async function readArtifact(
           case "nonpayable":
           case "payable":
             writeFunctions.push({
+              identifier: `fn_${element.name}_${(
+                element.inputs.map((i: any) => i.type) as string[]
+              ).join("_")}`,
               name: element.name,
               hasInputs: element.inputs.length > 0,
               inputs: element.inputs.map((i: any) => {
-                return { fn: element.name, name: i.name, type: i.type };
+                return { inputName: i.name, inputType: i.type };
               }),
             });
             break;
           case "view":
           case "pure":
             readFunctions.push({
+              identifier: `fn_${element.name}_${(
+                element.inputs.map((i: any) => i.type) as string[]
+              ).join("_")}`,
               name: element.name,
               hasInputs: element.inputs.length > 0,
               inputs: element.inputs.map((i: any) => {
-                return { fn: element.name, name: i.name, type: i.type };
+                return { inputName: i.name, inputType: i.type };
               }),
             });
             break;
@@ -78,9 +87,12 @@ export async function readArtifact(
         });
 
         events.push({
+          identifier: `event_${element.name}_${(
+            element.inputs.map((i: any) => i.type) as string[]
+          ).join("_")}`,
           name: element.name,
           inputs: element.inputs.map((i: any) => {
-            return { event: element.name, name: i.name, type: i.type };
+            return { inputName: i.name, inputType: i.type };
           }),
           inputsIndex: inputsIndex,
         });
